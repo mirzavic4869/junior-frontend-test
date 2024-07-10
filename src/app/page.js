@@ -6,11 +6,14 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const ITEMS_PER_PAGE = 8;
+
 export default function Home() {
 	const [listItem, setListItem] = useState([]);
 	const [searchList, setSearchList] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	async function getList() {
 		try {
@@ -29,12 +32,24 @@ export default function Home() {
 		getList();
 	});
 
+	// Search
 	const filteredList = listItem.filter(({ title }) => title.toLowerCase().includes(searchList.toLowerCase()));
+
+	// Pagination
+	const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+	const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+	const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
+
+	const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
 
 	const handleSearch = (e) => {
 		setSearchList(e.target.value);
+		setCurrentPage(1);
 	};
 
+	const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+	// Loading
 	if (loading) {
 		return (
 			<main className="flex items-center justify-center min-h-screen">
@@ -43,6 +58,7 @@ export default function Home() {
 		);
 	}
 
+	// Error
 	if (error) {
 		return (
 			<main className="flex items-center justify-center min-h-screen">
@@ -68,10 +84,19 @@ export default function Home() {
 				</Link>
 			</div>
 			<div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-				{filteredList.map(({ id, title, body }) => (
+				{currentItems.map(({ id, title, body }) => (
 					<div key={id}>
 						<Card title={title} body={body} />
 					</div>
+				))}
+			</div>
+
+			{/* Pagination controls */}
+			<div className="flex justify-center mt-8">
+				{Array.from({ length: totalPages }, (_, index) => (
+					<button key={index} onClick={() => paginate(index + 1)} className={`px-4 py-2 mx-1 rounded-md ${currentPage === index + 1 ? "bg-zinc-700 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>
+						{index + 1}
+					</button>
 				))}
 			</div>
 		</main>
