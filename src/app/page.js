@@ -10,6 +10,7 @@ export default function Home() {
 	const [listItem, setListItem] = useState([]);
 	const [searchList, setSearchList] = useState("");
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
 	async function getList() {
 		try {
@@ -17,6 +18,8 @@ export default function Home() {
 			setListItem(result.data);
 		} catch (error) {
 			console.log(error);
+			alert("Something went wrong. Please try again later.");
+			setError("Failed to fetch data. Please try again later.");
 		} finally {
 			setLoading(false);
 		}
@@ -36,6 +39,14 @@ export default function Home() {
 		return (
 			<main className="flex items-center justify-center min-h-screen">
 				<Loading />
+			</main>
+		);
+	}
+
+	if (error) {
+		return (
+			<main className="flex items-center justify-center min-h-screen">
+				<p className="text-rose-600">{error}</p>
 			</main>
 		);
 	}
