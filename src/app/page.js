@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components";
+import { Card, Loading } from "@/components";
 import { baseUrl } from "@/lib";
 import axios from "axios";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
 	const [listItem, setListItem] = useState([]);
 	const [searchList, setSearchList] = useState("");
+	const [loading, setLoading] = useState(true);
 
 	async function getList() {
 		try {
@@ -16,6 +17,8 @@ export default function Home() {
 			setListItem(result.data);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	}
 
@@ -28,6 +31,14 @@ export default function Home() {
 	const handleSearch = (e) => {
 		setSearchList(e.target.value);
 	};
+
+	if (loading) {
+		return (
+			<main className="flex items-center justify-center min-h-screen">
+				<Loading />
+			</main>
+		);
+	}
 
 	return (
 		<main className="flex flex-col min-h-screen px-4 py-12 md:p-18 lg:p-24">
