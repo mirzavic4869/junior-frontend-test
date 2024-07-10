@@ -92,9 +92,9 @@ export default function Home() {
 			</div>
 
 			{/* Pagination controls */}
-			<div className="flex justify-center mt-8">
+			<div className="grid grid-cols-4 gap-4 my-4 md:grid-cols-8 lg:grid-cols-12">
 				{Array.from({ length: totalPages }, (_, index) => (
-					<button key={index} onClick={() => paginate(index + 1)} className={`px-4 py-2 mx-1 rounded-md ${currentPage === index + 1 ? "bg-zinc-700 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>
+					<button key={index} onClick={() => paginate(index + 1)} className={`px-4 py-2 rounded-md ${currentPage === index + 1 ? "bg-zinc-700 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>
 						{index + 1}
 					</button>
 				))}
